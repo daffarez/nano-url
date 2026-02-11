@@ -61,3 +61,8 @@ Server will run at `http://localhost:9099`
 npm run build
 npm start
 ```
+
+## Swagger OpenAPI Docs
+```
+http://localhost:9099/docs
+```
