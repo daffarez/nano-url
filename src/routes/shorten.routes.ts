@@ -5,9 +5,13 @@ import { normalizeUrl } from "../utils/normalize-url";
 
 const router = Router();
 
+const isValidAlias = (alias: string) => {
+  return /^[a-zA-Z0-9-_]+$/.test(alias);
+};
+
 router.post("/url/shorten", async (req, res) => {
   try {
-    const { url } = req.body;
+    const { url, alias } = req.body;
 
     if (!url) {
       return res.status(400).json({ message: "URL is required" });
@@ -19,10 +23,27 @@ router.post("/url/shorten", async (req, res) => {
       return res.status(400).json({ message: "Invalid URL" });
     }
 
-    let code = generateCode();
+    let code = alias;
 
-    while (await prismaClient.url.findUnique({ where: { shortCode: code } })) {
+    if (alias) {
+      if (!isValidAlias(alias)) {
+        return res.status(400).json({ message: "Invalid alias format" });
+      }
+
+      const exists = await prismaClient.url.findUnique({
+        where: { shortCode: alias },
+      });
+
+      if (exists) {
+        return res.status(409).json({ message: "Alias already taken" });
+      }
+    } else {
       code = generateCode();
+      while (
+        await prismaClient.url.findUnique({ where: { shortCode: code } })
+      ) {
+        code = generateCode();
+      }
     }
 
     const newUrl = await prismaClient.url.create({
