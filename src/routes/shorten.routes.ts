@@ -61,6 +61,7 @@ router.post("/url/shorten", async (req, res) => {
   }
 });
 
+// internal for preview page
 router.get("/urls/:code", async (req, res) => {
   const { code } = req.params;
 
