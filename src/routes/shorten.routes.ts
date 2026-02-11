@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { prismaClient } from "../lib/prisma-client";
 import { generateCode } from "../utils/generate-code";
+import { normalizeUrl } from "../utils/normalize-url";
 
 const router = Router();
 
@@ -12,6 +13,12 @@ router.post("/url/shorten", async (req, res) => {
       return res.status(400).json({ message: "URL is required" });
     }
 
+    const normalized = normalizeUrl(url);
+
+    if (!normalized) {
+      return res.status(400).json({ message: "Invalid URL" });
+    }
+
     let code = generateCode();
 
     while (await prismaClient.url.findUnique({ where: { shortCode: code } })) {
@@ -20,7 +27,7 @@ router.post("/url/shorten", async (req, res) => {
 
     const newUrl = await prismaClient.url.create({
       data: {
-        originalUrl: url,
+        originalUrl: normalized,
         shortCode: code,
       },
     });
