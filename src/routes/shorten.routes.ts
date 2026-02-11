@@ -61,4 +61,21 @@ router.post("/url/shorten", async (req, res) => {
   }
 });
 
+router.get("/urls/:code", async (req, res) => {
+  const { code } = req.params;
+
+  const url = await prismaClient.url.findUnique({
+    where: { shortCode: code },
+  });
+
+  if (!url) {
+    return res.status(404).json({ message: "Not found" });
+  }
+
+  res.json({
+    originalUrl: url.originalUrl,
+    hostname: new URL(url.originalUrl).hostname,
+  });
+});
+
 export default router;

@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <title>Leaving Nano URL</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #0f172a;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+      .box {
+        background: #1e293b;
+        padding: 30px;
+        border-radius: 12px;
+        max-width: 500px;
+        text-align: center;
+      }
+      a.button {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 20px;
+        background: #22c55e;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+      }
+      .domain {
+        color: #38bdf8;
+        margin-top: 10px;
+        word-break: break-all;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      <h2>You are leaving Nano URL</h2>
+      <p>This link will take you to:</p>
+      <div class="domain">Loading...</div>
+      <a class="button">Continue</a>
+    </div>
+  </body>
+  <script>
+    const loadData = async () => {
+      const code = window.location.pathname.substring(1);
+
+      const res = await fetch(`/api/urls/${code}`);
+      if (!res.ok) {
+        document.body.innerHTML = "<h1>Link not found</h1>";
+        return;
+      }
+
+      const data = await res.json();
+
+      document.querySelector(".domain").textContent = data.hostname;
+
+      const btn = document.querySelector(".button");
+      btn.href = `/r/${code}`;
+    };
+
+    loadData();
+  </script>
+</html>
