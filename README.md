@@ -1,12 +1,11 @@
 # Nano URL
-Nano URL is a lightweight URL shortening service built with Node.js, Express, and Prisma. It converts long URLs into short, shareable links and safely redirects users through a preview page while tracking usage statistics. This project was developed during spare time as a personal learning exercise to deepen my understanding of backend fundamentals such as routing, database persistence, and HTTP behavior.
+Nano URL is a lightweight URL shortening service built with Node.js, Express with TypeScript and Prisma. It converts long URLs into short, shareable links and safely redirects users through a preview page while tracking usage statistics. This project was developed during spare time as a personal learning exercise to deepen my understanding of backend fundamentals such as routing, database persistence, and HTTP behavior.
 
 ## Features
 - Generate short URLs
 - Redirect to original URLs
 - Click tracking (hit counter)
 - Persistent storage using SQLite (via Prisma ORM)
-- Clean service-controller architecture
 
 ## How it works
 The service creates a unique short code for each URL and stores it in the database.
